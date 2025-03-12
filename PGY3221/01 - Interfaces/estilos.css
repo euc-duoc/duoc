@@ -1,0 +1,33 @@
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.espaciado {
+    margin: 2px;
+    padding: 5px;
+}
+
+.principal {
+    display: flex;
+    flex-direction: column;
+}
+
+.titulo {
+    background-color: darkgrey;
+}
+
+.contenido {
+    display: flex;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    background-color: darkgrey;
+}
+
+.seccion {
+    border: 1px solid darkgrey;
+    flex-grow: 4;
+}
