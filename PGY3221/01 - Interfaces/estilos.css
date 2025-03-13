@@ -7,27 +7,117 @@ body {
     padding: 5px;
 }
 
-.principal {
-    display: flex;
-    flex-direction: column;
-}
-
 .titulo {
-    background-color: darkgrey;
+    background-image: url(https://res.infoq.com/articles/who-is-on-the-team/en/headerimage/who-is-on-the-team-header-1612952290708.jpg);
+    background-position-y: 30%;
+    background-size: 100%;
+    height: 200px;
+    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
 }
 
-.contenido {
+.estructura {
     display: flex;
 }
 
-.menu {
+.menu {     
+    width: 25%;
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
-    background-color: darkgrey;
+    align-items: center;
+    background-color: aliceblue;
 }
 
-.seccion {
-    border: 1px solid darkgrey;
-    flex-grow: 4;
+.menu div {
+    margin: 10px;
+    padding: 5px;
 }
+
+.principal {
+    width: 75%;
+}
+
+.buscador {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.buscador input {
+    width: 60%;
+    background-color: rgb(241, 237, 237);
+    background-image: url(img/icon_search.png);
+    background-size: 4%;
+    background-repeat: no-repeat;
+    background-position: 99%;
+    height: 30px;
+}
+
+.contenido {    
+    width: 100%;
+}
+
+.contenidoFlex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.contenidoGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    place-items: center;
+}
+
+.opcMenu {   
+    font-weight: bold;
+    width: 80%;
+}
+
+.opcMenu:hover {
+    color: blue;
+    font-weight: bolder;
+    padding: -1px;
+}
+
+.opcMenuSel {
+    text-decoration: underline;
+}
+
+.itemGrupo {
+    border: 5px outset grey;
+    text-align: center;
+    place-content: center;
+    height: 150px;
+    width: 150px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.itemGrupo .nombreGrupo {
+    font-weight: bolder;
+}
+
+.itemGrupo img {
+    width: 100%;
+    height: 100%;
+}
+
+.detalleGrupo {
+    display: flex;
+}
+
+.detalleGrupo .fotoGrupo {
+    width: 50%;
+}
+
+.detalleGrupo .fotoGrupo img {
+    width: 100%;
+}
+
+.detalleGrupo .integrantesGrupo {
+    padding-left: 10px;
+    width: 50%;
+}
+
