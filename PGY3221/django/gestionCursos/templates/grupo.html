@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--<style></style>-->
+        <link rel="stylesheet" href="{% static '/css/estilos.css' %}">
+        <title>Gestión de grupos y estudiantes</title>
+    </head>
+    <body>
+        <div class="titulo espaciado">
+            <h1>Gestionar Grupo</h1>
+            <h2>{{ mensaje }}</h2>
+        </div>
+        <div class="estructura">
+            <div class="menu espaciado">
+                <div class="opcMenu">Principal</div>
+                <div class="opcMenu">Agregar grupo</div>
+                <div class="opcMenu">Gestionar estudiantes</div>
+                <div class="opcMenu">Asignación automática</div>
+                <div class="opcMenu"><a href="{% url 'principal' %}">Volver</a></div>
+            </div>
+            <div class="principal espaciado">                
+                <div class="detalleGrupo espaciado">
+                    <div class="fotoGrupo">
+                        <img src="https://comicbook.com/wp-content/uploads/sites/4/2024/08/00a76fda-bc0b-4efb-a915-12c228a0530a.jpg">
+                    </div>
+                    <div class="integrantesGrupo">
+                        <h3>Integrantes:</h3>
+                        <ul>
+                            <li>Power Ranger Rojo</li>
+                            <li>Power Ranger Verde</li>
+                            <li>Power Ranger Negro</li>
+                            <li>Power Ranger Rosada</li>
+                            <li>Power Ranger Amarilla</li>                            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html> 
