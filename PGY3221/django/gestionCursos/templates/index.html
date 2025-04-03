@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--<style></style>-->
+        <link rel="stylesheet" type="text/css" href="{% static '/css/estilos.css' %}">
+        <title>Gestión de grupos y estudiantes</title>
+    </head>
+    <body>
+        <div class="titulo espaciado">
+            <h1>Gestionar grupos</h1>
+        </div>
+        <div class="estructura">
+            <div class="menu espaciado">
+                <div class="opcMenu opcMenuSel">Principal</div>
+                <div class="opcMenu"><a href="{% url 'agregar grupo' %}">Agregar grupo</a></div>
+                <div class="opcMenu">Gestionar estudiantes</div>
+                <div class="opcMenu">Asignación automática</div>                
+            </div>
+            <div class="principal espaciado">
+                <div class="buscador">
+                    <b>Buscar</b> &nbsp;                    
+                    <input type="text"/>
+                </div>
+                <div class="contenido contenidoFlex espaciado">
+                    {% for grupo in grupos %}
+                    <div class="itemGrupo">
+                        <div class="nombreGrupo">{{ grupo.nombre }}</div>
+                        <img src="{{ grupo.imgUrl }}">
+                        <div>
+                            <a href="{% url 'grupo' grupo.id %}">[Ver]</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html> 
