@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Grupo
 
 # Create your views here.
 def principal(request):
-    grupos = [
+    '''grupos = [
         {
             'id': 1, 
             'nombre': "Grupo 1",
@@ -33,14 +34,25 @@ def principal(request):
             'nombre': "Grupo 6",
             'imgUrl': "https://majorspoilers.com/wp-content/uploads/2024/03/X-Men-97-1.jpg"
         }
-    ]
+    ]'''
 
+    grupos = Grupo.objects.all()
     datos = { 'grupos': grupos }
     return render(request, 'index.html', datos)
 
-def grupo(request, id):
-    datos = { 'mensaje': "Se dio click al grupo con ID " + str(id) }
+def grupo(request, id):    
+    datos = { 'grupo': get_object_or_404(Grupo, id=id) }
     return render(request, 'grupo.html', datos)
 
 def agregar_grupo(request):
     return render(request, 'agregar_grupo.html')
+
+def guardar_grupo(request):
+    g = Grupo(nombre=request.POST.get("nombreGrupo"), tipo=request.POST["tipoGrupo"], imgUrl=request.POST["imgUrlGrupo"])    
+    g.save()
+    return redirect("grupo", id=g.id)
+
+def eliminar_grupo(request, id):
+    g = get_object_or_404(Grupo, id=id)
+    g.delete()
+    return redirect("principal")

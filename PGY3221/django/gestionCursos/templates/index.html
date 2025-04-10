@@ -29,6 +29,7 @@
                         <img src="{{ grupo.imgUrl }}">
                         <div>
                             <a href="{% url 'grupo' grupo.id %}">[Ver]</a>
+                            <a href="{% url 'eliminar grupo' grupo.id %}">[Eliminar]</a>
                         </div>
                     </div>
                     {% endfor %}

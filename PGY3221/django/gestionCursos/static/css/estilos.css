@@ -112,8 +112,8 @@ body {
     width: 50%;
 }
 
-.detalleGrupo .fotoGrupo img {
-    width: 100%;
+.fotoGrupo img {
+    width: 500px;
 }
 
 .detalleGrupo .integrantesGrupo {
