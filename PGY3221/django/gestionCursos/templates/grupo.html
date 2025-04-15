@@ -24,38 +24,37 @@
                 <div class="opcMenu">Asignación automática</div>
                 <div class="opcMenu"><a href="{% url 'principal' %}">Volver</a></div>
             </div>
-            <div class="principal espaciado">                
-                <div class="espaciado">
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Nombre del grupo</label>
-                        <label class="form-label">{{ grupo.nombre }}</label>
+            <div class="principal espaciado">
+            
+                <div class="row">
+                    <div class="col-5">
+                        <div class="md-6">
+                            <label class="form-label fw-bold">Nombre del grupo:</label>
+                            <label class="form-label">{{ grupo.nombre }}</label>
+                        </div>
+                        <div class="md-6">
+                            <label class="form-label fw-bold">ID:</label>
+                            <label class="form-label">{{ grupo.id }}</label>
+                        </div>
+                        <div class="md-6">
+                            <label class="form-label fw-bold">Tipo:</label>
+                            <label class="form-label">{{ grupo.get_tipo_display }}</label>
+                        </div>
+                        <div class="integrantesGrupo md-6">
+                            <h3>Integrantes:</h3>
+                            <ul>
+                                {% for integrante in integrantes %}
+                                <li>{{ integrante.nombre }}</li>
+                                {% endfor %}                         
+                            </ul>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">ID</label>
-                        <label class="form-label">{{ grupo.id }}</label>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Tipo</label>
-                        <label class="form-label">{{ grupo.get_tipo_display }}</label>
-                    </div>
-
-                    <div class="mb-3">
+                    <div class="col-6">
                         <label class="form-label fw-bold">Foto:</label>
                         <div class="fotoGrupo">
                             <img src="{{ grupo.imgUrl }}">
                         </div>
-                    </div>
-
-                    <!--<div class="integrantesGrupo">
-                        <h3>Integrantes:</h3>
-                        <ul>
-                            <li>Power Ranger Rojo</li>
-                            <li>Power Ranger Verde</li>
-                            <li>Power Ranger Negro</li>
-                            <li>Power Ranger Rosada</li>
-                            <li>Power Ranger Amarilla</li>                            
-                        </ul>
-                    </div>-->
+                    </div>                    
                 </div>
             </div>
         </div>

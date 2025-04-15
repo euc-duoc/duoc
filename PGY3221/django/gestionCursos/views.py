@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Grupo
+from .models import Grupo, Estudiante
 
 # Create your views here.
 def principal(request):
@@ -41,15 +41,39 @@ def principal(request):
     return render(request, 'index.html', datos)
 
 def grupo(request, id):    
-    datos = { 'grupo': get_object_or_404(Grupo, id=id) }
+    grupo = get_object_or_404(Grupo, id=id)
+    integrantes = Estudiante.objects.filter(grupo=grupo)
+
+    if not integrantes:
+        integrantes = [ { "nombre": "Sin estudiantes" } ]
+
+    datos = { 
+        'grupo': grupo,
+        'integrantes': integrantes
+    }
+
     return render(request, 'grupo.html', datos)
 
 def agregar_grupo(request):
     return render(request, 'agregar_grupo.html')
 
 def guardar_grupo(request):
-    g = Grupo(nombre=request.POST.get("nombreGrupo"), tipo=request.POST["tipoGrupo"], imgUrl=request.POST["imgUrlGrupo"])    
+    # Procesar integrantes del grupo
+    integrantes = request.POST.get('agregarIntegranteNombres').split(',')
+
+    g = Grupo(
+        nombre=request.POST.get("nombreGrupo"),
+        tipo=request.POST["tipoGrupo"],
+        imgUrl=request.POST["imgUrlGrupo"],
+        numintegrantes=len(integrantes)
+    )    
+    
     g.save()
+
+    for integrante in integrantes:
+        e = Estudiante(nombre=integrante, grupo=g)
+        e.save()
+
     return redirect("grupo", id=g.id)
 
 def eliminar_grupo(request, id):

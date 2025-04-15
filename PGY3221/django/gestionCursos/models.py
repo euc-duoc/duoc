@@ -9,3 +9,8 @@ class Grupo(models.Model):
     nombre = models.CharField(max_length=30)
     tipo = models.CharField(max_length=10, choices=TipoGrupo.choices)
     imgUrl = models.CharField(max_length=1000, default="#")
+    numintegrantes = models.IntegerField()
+
+class Estudiante(models.Model):
+    nombre = models.CharField(max_length=100)
+    grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
