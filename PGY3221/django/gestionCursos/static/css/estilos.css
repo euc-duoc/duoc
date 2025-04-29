@@ -2,6 +2,19 @@ body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+a:link {   
+    text-decoration: none;
+    color: darkslategrey;
+}
+
+a:visited {
+    color: darkslategrey;
+}
+
+a:hover {
+    color: blue;
+}
+
 .espaciado {
     margin: 2px;
     padding: 5px;
@@ -28,7 +41,7 @@ body {
 }
 
 .menu div {
-    margin: 10px;
+    margin: 5px;
     padding: 5px;
 }
 
@@ -70,12 +83,6 @@ body {
 .opcMenu {   
     font-weight: bold;
     width: 80%;
-}
-
-.opcMenu:hover {
-    color: blue;
-    font-weight: bolder;
-    padding: -1px;
 }
 
 .opcMenuSel {
@@ -120,4 +127,28 @@ body {
     padding-left: 10px;
     width: 50%;
 }
+
+.contProblemas {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 500px;
+    width: 100%;
+}
+
+.contProblemas > div {
+    margin: 1px;
+    padding: 2px;
+    background-color: azure;
+}
+
+.contProblemas > div:hover {
+    background-color: lightblue;
+}
+
+.problemasHeader {
+    background-color: darkslategrey;
+    color: white
+}
+
+
 

@@ -41,12 +41,16 @@
                             <label class="form-label">{{ grupo.get_tipo_display }}</label>
                         </div>
                         <div class="integrantesGrupo md-6">
-                            <h3>Integrantes:</h3>
+                            <h2>Integrantes:</h2>
                             <ul>
                                 {% for integrante in integrantes %}
                                 <li>{{ integrante.nombre }}</li>
                                 {% endfor %}                         
                             </ul>
+                        </div>
+                        <div class="integrantesGrupo md-6">
+                            <h2>Problemas asignados:</h2>
+                            <a href="{% url 'ver problemas' grupo.id %}">Ver problemas</a>
                         </div>
                     </div>
                     <div class="col-6">

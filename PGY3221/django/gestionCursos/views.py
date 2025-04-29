@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Grupo, Estudiante
+from .models import Grupo, Estudiante, Problemas
 
 # Create your views here.
 def principal(request):
@@ -80,3 +80,38 @@ def eliminar_grupo(request, id):
     g = get_object_or_404(Grupo, id=id)
     g.delete()
     return redirect("principal")
+
+def ver_problemas(request, id):
+    g = get_object_or_404(Grupo, id=id)
+    problemas = Problemas.objects.filter(grupo=g)
+
+    datos = { 
+        'grupo': g,
+        'problemas': problemas
+    }
+
+    return render(request, 'ver_problemas.html', datos)
+
+def asignar_problemas(request, id):
+    g = get_object_or_404(Grupo, id=id)
+    problemas = Problemas.objects.filter(grupo=g)
+
+    datos = { 
+        'grupo': g,
+        'problemas': problemas
+    }
+
+    return render(request, 'asignar_problemas.html', datos)
+
+def guardar_problema(request):
+    g = get_object_or_404(Grupo, id=request.POST.get("grupoId"))
+
+    p = Problemas(
+        nombre=request.POST.get("problemaNombre"),
+        codeforcesId=request.POST.get("problemaId"),
+        codeforcesIndex=request.POST.get("problemaIndex"),
+        grupo=g
+    )
+
+    p.save()
+    return redirect("ver problemas", id=g.id)

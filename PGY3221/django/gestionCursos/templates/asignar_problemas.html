@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--<style></style>-->
+        <link rel="stylesheet" href="{% static '/css/estilos.css' %}">
+        <title>Ver problemas</title>
+
+        <!-- Para bootstrap -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+        <!-- Para jquery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script type="text/javascript" src="{% static 'js/agregarGrupo.js' %}"></script>
+
+        <script type="text/javascript">
+            function enviarAgregarProblema(id, index, nombre) {
+                $("#formAgregarProblema input[name='problemaId']").val(id);
+                $("#formAgregarProblema input[name='problemaIndex']").val(index);
+                $("#formAgregarProblema input[name='problemaNombre']").val(nombre);
+                $("#formAgregarProblema").submit();
+            }
+
+            $(document).ready(function(){
+                $.ajax({
+                    url: "https://codeforces.com/api/problemset.problems?tags=games",
+                    dataType: "json"
+                }).done(function(data) {
+                    console.log(data.result);
+                    
+                    $("#labelProblemas").html("Problemas disponibles:");
+                    $("#contProblemas").empty().append(`<div class="row">
+                        <div class="col-1 fw-bolder problemasHeader">
+                            ID
+                        </div>
+                        <div class="col-5 fw-bolder problemasHeader">
+                            Nombre
+                        </div>
+                        <div class="col-3 fw-bolder problemasHeader">
+                            Link
+                        </div>
+                        <div class="col-3 fw-bolder problemasHeader">
+                            Acción
+                        </div>
+                    </div>`);
+
+                    $.each(data.result.problems, function(index, problem) {
+
+                        if(!problem.tags.includes("*special")) {
+                            let problemNode = $(`<div class="row">
+                                    <div class="col-1">
+                                        ${problem.contestId}
+                                    </div>
+                                    <div class="col-5 fw-bold">
+                                        ${problem.name}
+                                    </div>
+                                    <div class="col-3">
+                                        <a target="_blank" rel="noopener noreferrer" href="https://codeforces.com/problemset/problem/${problem.contestId}/${problem.index}">[Ver en codeforces]</a>
+                                    </div>
+                                    <div class="col-3">                                        
+                                        <input type="button" class="btn btn-primary" value="Asignar al grupo" onclick="enviarAgregarProblema(${problem.contestId},'${problem.index}','${problem.name}');"/>
+                                    </div>
+                                </div>`)
+                                .appendTo("#contProblemas");
+                        }
+                    });
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="titulo espaciado">
+            <h1>Asignar problemas a grupo {{ grupo.id }}</h1>
+        </div>
+        <div class="estructura">
+            <div class="menu espaciado">
+                <div class="opcMenu"><a href="{% url 'principal' %}">Inicio</a></div>
+                <div class="opcMenu"><a href="{% url 'ver problemas' grupo.id %}">Volver a problemas</a></div>
+                <div class="opcMenu"><a href="{% url 'agregar grupo' %}">Agregar grupo</a></div>                
+            </div>
+            <div class="principal">
+                <label id="labelProblemas" class="form-label fw-bold">Cargando problemas&nbsp;
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="sr-only"></span>
+                    </div>
+                </label>                
+                <div id="contProblemas" class="contProblemas col-12">
+                </div>
+            </div>
+            <form id="formAgregarProblema" method="POST" action="{% url 'guardar problema' %}">
+                {% csrf_token %}
+                <input type="hidden" name="grupoId" value="{{ grupo.id }}"/>
+                <input type="hidden" name="problemaNombre" value=""/>
+                <input type="hidden" name="problemaId" value=""/>
+                <input type="hidden" name="problemaIndex" value=""/>
+            </form>
+        </div>
+    </body>
+</html>

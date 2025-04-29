@@ -14,3 +14,9 @@ class Grupo(models.Model):
 class Estudiante(models.Model):
     nombre = models.CharField(max_length=100)
     grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
+
+class Problemas(models.Model):
+    nombre = models.CharField(max_length=100)
+    codeforcesId = models.IntegerField()
+    codeforcesIndex = models.CharField(max_length=10)
+    grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
