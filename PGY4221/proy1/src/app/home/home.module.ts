@@ -8,6 +8,7 @@ import { HomePageRoutingModule } from './home-routing.module';
 
 // Ejemplo Pipe
 import { FormatoPipe } from '../components/formato.pipe';
+import { MascotaCardComponent } from '../components/mascota-card/mascota-card.component';
 
 @NgModule({
   imports: [
@@ -16,6 +17,6 @@ import { FormatoPipe } from '../components/formato.pipe';
     IonicModule,
     HomePageRoutingModule
   ],
-  declarations: [HomePage, FormatoPipe]
+  declarations: [HomePage, FormatoPipe, MascotaCardComponent]
 })
 export class HomePageModule {}

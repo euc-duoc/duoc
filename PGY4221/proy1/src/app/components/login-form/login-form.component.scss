@@ -5,3 +5,11 @@ ion-row {
 ion-input {
     --background: grey;    
 }
+
+::ng-deep li {
+    color: red !important;
+}
+
+ul {
+    font-size: small;
+}

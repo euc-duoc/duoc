@@ -1,0 +1,17 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>{{ mascotaInfo.nombre }}</ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content>
+    <ion-img
+      src="./assets/{{ mascotaInfo.foto }}"
+      alt="{{ mascotaInfo.nombre }}"
+    ></ion-img>
+    <div class="right">
+      <a (click)="irADetalleMascota()">
+        <ion-icon name="arrow-forward-outline" size="large"></ion-icon>
+      </a>
+    </div>    
+  </ion-card-content>
+</ion-card>

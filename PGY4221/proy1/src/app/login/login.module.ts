@@ -18,6 +18,7 @@ import { LoginFormComponent } from '../components/login-form/login-form.componen
     IonicModule,
     LoginPageRoutingModule
   ],
-  declarations: [LoginPage, LoginFormComponent]
+  declarations: [LoginPage, LoginFormComponent],
+  exports: [LoginFormComponent]
 })
 export class LoginPageModule {}
