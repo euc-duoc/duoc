@@ -1,0 +1,45 @@
+<ion-grid>
+  <ion-row>
+    <ion-col>
+      <ul id="errCont">        
+      </ul>      
+    </ion-col>
+  </ion-row> 
+  <ion-row>
+    <ion-col size="4">
+      Username:
+    </ion-col>
+    <ion-col>
+      <ion-input 
+        id="nombreUsuario"
+        class="ion-padding"
+        placeholder="{{ datos.user }}"
+        [(ngModel)]="datos.user"
+      ></ion-input>      
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="4">
+      Password:
+    </ion-col>
+    <ion-col>
+      <ion-input
+        id="password"
+        type="password" 
+        class="ion-padding" 
+        placeholder="{{ datos.pwd }}" 
+        [(ngModel)]="datos.pwd"
+      ></ion-input>
+    </ion-col>
+  </ion-row>
+  <ion-row class="ion-text-center">
+    <ion-col>
+      <ion-button expand="full" (click)="iniciar()">Ingresar con DB</ion-button>
+    </ion-col>
+  </ion-row>
+  <ion-row class="ion-text-center">
+    <ion-col>
+      <ion-button expand="full" (click)="iniciar(true)">Ingresar con Storage</ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
