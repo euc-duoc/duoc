@@ -6,6 +6,21 @@ const routes: Routes = [
   {
     path: '',
     component: HomePage,
+    children: [
+      {
+        path: 'nueva',
+        loadChildren: () => import('../nueva/nueva.module').then(m => m.NuevaPageModule)
+      },
+      {
+        path: 'nueva2',
+        loadChildren: () => import('../nueva2/nueva2.module').then(m => m.Nueva2PageModule)
+      },
+      {
+        path: '',
+        redirectTo: '/home/nueva',
+        pathMatch: 'full'
+      }
+    ]
   }
 ];
 

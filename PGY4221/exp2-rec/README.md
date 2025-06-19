@@ -62,7 +62,7 @@ Además, se modificará el archivo [`app-routing.module.ts`](/PGY4221/exp2-rec/s
 
 Para que sea compatible con NgModules, debes modificar el archivo [`nueva.page.ts`](/PGY4221/exp2-rec/src/app/nueva/nueva.page.ts) incorporando la configuración `standalone = false`:
 
-```javascript
+```typescript
 @Component({
   selector: 'app-nueva',
   templateUrl: './nueva.page.html',
@@ -79,6 +79,91 @@ En este proyecto se agregaron dos pages adicionales llamadas `Nueva2` y `Portada
 
 ## 4. Organización y redireccionamiento
 
-Configuraremos la app para que, al iniciar, en vez de abrir la page `Home`, abra la page `Portada`, la cual incluirá dos segmentos conformados por las pages `Nueva1` y `Nueva2`.
+Configuraremos la app para que, al iniciar, en vez de abrir la page `Home`, abra la page `Portada`, la cual incluirá dos tabs con las pages `Nueva1` y `Nueva2`.
 
+* Editamos [`app-routing.module.ts`](/PGY4221/exp2-rec/src/app/app-routing.module.ts):
 
+```typescript
+  {
+    path: '',
+    redirectTo: 'portada', // <- aquí
+    pathMatch: 'full'
+  },
+```
+
+* Agregamos las tabs en [`home.page.html`](/PGY4221/exp2-rec/src/app/home/home.page.html)...
+
+```typescript
+<ion-content [fullscreen]="true">
+  //...
+
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button tab="nueva">
+        <ion-icon name="library"></ion-icon>
+        Nueva
+      </ion-tab-button>
+      <ion-tab-button tab="nueva2">
+        <ion-icon name="library"></ion-icon>
+        Nueva 2
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</ion-content>
+```
+
+* Actualizamos [`home-routing.module.ts`](/PGY4221/exp2-rec/src/app/home/home-routing.module.ts) para activar las tabs en la página `home`:
+
+```typescript
+const routes: Routes = [
+  {
+    path: '',
+    component: HomePage,
+    children: [
+      {
+        path: 'nueva',
+        loadChildren: () => import('../nueva/nueva.module').then(m => m.NuevaPageModule)
+      },
+      {
+        path: 'nueva2',
+        loadChildren: () => import('../nueva2/nueva2.module').then(m => m.Nueva2PageModule)
+      },
+      {
+        path: '',
+        redirectTo: '/home/nueva',
+        pathMatch: 'full'
+      }
+    ]
+  }
+];
+```
+
+* Agregamos algún contenido en [`nueva.page.html`](/PGY4221/exp2-rec/src/app/nueva/nueva.page.html) y [`nueva2.page.html`](/PGY4221/exp2-rec/src/app/nueva2/nueva2.page.html) para probar las tabs.
+
+* Finalmente, quitamos de [`app-routing.module.ts`](/PGY4221/exp2-rec/src/app/app-routing.module.ts) las entradas `nueva` y `nueva2`, para que solo sean accesibles a través de `home`.
+
+De esta forma, la url http://localhost:8100/home queda funcional con las tabs. Sin embargo, como la raíz de la app es `portada`, y está se encuentra en blanco. Crearemos un botón para redireccionar a `home`.
+
+* Creamos el método `irAHome()` en  [`portada.page.ts`](/PGY4221/exp2-rec/src/app/portada/portada.page.ts):
+
+```typescript
+import { Router } from '@angular/router';
+// ...
+export class PortadaPage implements OnInit {
+  constructor(private router: Router) { }
+// ...
+  irAHome() {
+    this.router.navigate(['/home']);
+  }
+}
+```
+* Creamos un botón en  [`portada.page.html`](/PGY4221/exp2-rec/src/app/portada/portada.page.html) para invocar dicha función y redirigir:
+
+```typescript
+<ion-content [fullscreen]="true">
+  // ...
+  <ion-button (click)="irAHome()">Ir a Home</ion-button>
+</ion-content>
+```
+
+> Todos los cambios hasta acá estarán publicados en el branch `tutorial-exp2-rec`, commit con descripción "*Hasta sección 4*".
