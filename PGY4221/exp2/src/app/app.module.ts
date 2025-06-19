@@ -11,10 +11,13 @@ import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';
 // Para localStorage
 import { IonicStorageModule } from '@ionic/storage-angular';
 
+// Para API
+import { provideHttpClient } from '@angular/common/http';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, IonicStorageModule.forRoot()],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, SQLite],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, SQLite, provideHttpClient()],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
