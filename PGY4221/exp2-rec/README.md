@@ -5,9 +5,7 @@ Este tutorial te permitirá el despliegue de una app Ionic + Angular muy simple 
 * Inicialización de proyecto.
 * Creación de componentes (pages, services, etc.) con el estándar NgModule.
 * Configurar rutas de acceso para la app.
-* Implementar carga diferida (*lazy loading*).
 * Implementar persistencia local (*local storage*).
-* Implementar limitación de acceso a página mediante *guards*.
 * Implementar persistencia con SQLite funcional en dispositivo Android (con emulador).
 * Implementar consumo de API Rest.
 
@@ -167,3 +165,114 @@ export class PortadaPage implements OnInit {
 ```
 
 > Todos los cambios hasta acá estarán publicados en el branch `tutorial-exp2-rec`, commit con descripción "*Hasta sección 4*".
+
+## 5. Implementar persistencia con *localStorage*
+
+Instalamos los módulos necesarios:
+
+> `npm install @ionic/storage`
+
+> `npm install @ionic/storage-angular`
+
+Creamos un servicio llamado `Storage` alojado en la carpeta [`services`](/PGY4221/exp2-rec/src/app/services/), con código en el archivo [`storage.service.ts`](/PGY4221/exp2-rec/src/app/services/storage.service.ts):
+
+> `ionic g service services/Storage`
+
+Implementamos una persistencia simple de un contador que podrá ser incrementado con un botón. Para eso agregamos algunos métodos en [`storage.service.ts`](/PGY4221/exp2-rec/src/app/services/storage.service.ts):
+
+```typescript
+import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage-angular';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class StorageService {
+
+  constructor(private _storage: Storage) { 
+    this._storage.create();
+  }
+
+  public async obtener() {
+    let numActual = await this._storage?.get('numero');
+
+    if(!numActual)
+      return 0;
+
+    return numActual;
+  }
+
+  public async incrementar() {
+    let numActual = await this.obtener();
+    await this._storage?.set('numero', numActual++);    
+
+    return numActual;
+  }
+}
+```
+
+Incorporaremos esta funcionalidad en la pestaña `Nueva`, partiendo por una variable que guarde el número que se obtiene desde el storage y una función que se use para actualizar el número en el storage y actualizarlo en la UI.
+
+Primero es necesario incorporar `StorageService` como un servicio que provee funcionalidad a la page `Nueva`, esto sumado a todas sus dependencias. Esto se realiza incorporando las referencias en la entrada `providers` del respectivo módulo [`nueva.module.ts`](/PGY4221/exp2-rec/src/app/nueva/nueva.module.ts):
+
+```typescript
+@NgModule({
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    NuevaPageRoutingModule
+  ],
+  declarations: [NuevaPage],
+  providers: [StorageService, Storage] // <- acá se permite que los servicios requeridos se inyecten
+})
+export class NuevaPageModule {}
+```
+
+Modificamos [`nueva.page.ts`](/PGY4221/exp2-rec/src/app/nueva/nueva.page.ts):
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { StorageService } from '../services/storage.service';
+
+@Component({
+  selector: 'app-nueva',
+  templateUrl: './nueva.page.html',
+  styleUrls: ['./nueva.page.scss'],
+  standalone: false
+})
+export class NuevaPage implements OnInit {
+  numero: Number = 0;
+
+
+  constructor(
+    private storage: StorageService // <- Acá se inyecta el servicio
+  ) 
+  { }
+
+  async ngOnInit() {
+    this.numero = await this.storage.obtener();
+  }
+
+  async actualizar() {
+    this.numero = await this.storage.incrementar();
+    return true;
+  }
+}
+```
+
+Luego modificamos [`nueva.page.html`](/PGY4221/exp2-rec/src/app/nueva/nueva.page.html) para incorporar los elementos visuales necesarios:
+
+```typescript
+<ion-content [fullscreen]="true">
+  // ..
+
+  Contador actual: 
+  <span style="font-weight: bolder; color: red;">
+    {{numero}}
+  </span><br>
+  <ion-button (click)="actualizar()">Actualizar número</ion-button>
+</ion-content>
+```
+
+> Todos los cambios hasta acá estarán publicados en el branch `tutorial-exp2-rec`, commit con descripción "*Hasta sección 5*".

@@ -11,5 +11,9 @@
     </ion-toolbar>
   </ion-header>
 
-  Nueva
+  Contador actual: 
+  <span style="font-weight: bolder; color: red;">
+    {{numero}}
+  </span><br>
+  <ion-button (click)="actualizar()">Actualizar número</ion-button>
 </ion-content>

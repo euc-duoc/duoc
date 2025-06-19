@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-nueva',
@@ -7,10 +8,15 @@ import { Component, OnInit } from '@angular/core';
   standalone: false
 })
 export class NuevaPage implements OnInit {
+  numero: Number = 0;
 
-  constructor() { }
+  constructor(private storage: StorageService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.numero = await this.storage.obtener();
   }
 
+  async actualizar() {
+    this.numero = await this.storage.incrementar();
+  }
 }
