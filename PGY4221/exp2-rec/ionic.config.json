@@ -1,0 +1,7 @@
+{
+  "name": "exp2-rec",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
