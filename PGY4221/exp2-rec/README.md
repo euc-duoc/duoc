@@ -449,3 +449,7 @@ Modificamos [`nueva2.page.html`](/PGY4221/exp2-rec/src/app/nueva2/nueva2.page.ht
 Con estos cambios, actualizamos la versión nativa con `ionic cap sync android` y probamos en nuestro emulador, para asegurarnos que el texto almacenado en la BD se muestra en la pestaña `Nueva2`.
 
 > Todos los cambios hasta acá estarán publicados en el branch `tutorial-exp2-rec`, commit con descripción "*Hasta sección 6*".
+
+## 7. Consumo de API
+
+Ver en repositorio, branch [exp2-sem2-api](https://github.com/euc-duoc/duoc/tree/exp2-sem2-api/PGY4221) junto a video publicado en foro de semana 5 en AVA.
