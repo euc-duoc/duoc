@@ -276,3 +276,176 @@ Luego modificamos [`nueva.page.html`](/PGY4221/exp2-rec/src/app/nueva/nueva.page
 ```
 
 > Todos los cambios hasta acá estarán publicados en el branch `tutorial-exp2-rec`, commit con descripción "*Hasta sección 5*".
+
+## 6. Implementar persistencia con *SQLite* (emulador y/o dispositivo)
+
+### 6.1 Habilitación de entorno y emulador
+
+Instalamos los módulos necesarios para utilizar SQLite, que corresponden a plugins **cordova**:
+
+(*nota*: con estas versiones he podido testear sin problemas en conjunto a las más recientes de ionic y node)
+
+> `npm install cordova-sqlite-storage`
+
+> `npm install @awesome-cordova-plugins/sqlite@5.44.0`
+
+> `npm install @awesome-cordova-plugins/core@5.44.0`
+
+La persistencia en SQLite sólo se puede operar a través de un dispositivo móvil real, o en su defecto, un **emulador**. Para acceder a un emulador (en particular, Android) y a poder testearlo, es necesario que descargues e instales **Android Studio** desde https://developer.android.com/studio.
+
+Hecho lo anterior, puedes instalar algunas librerías necesarias para generar una versión versión *nativa* de tu proyecto actual para que el emulador la pueda ejecutar. Esto se hace con las utilidades de **capacitor**:
+
+> `npm install @capacitor/android`
+
+Hecho esto, ejecutamos el comando necesario para generar la versión nativa desde Ionic:
+
+> `ionic capacitor sync android`
+
+Lo que se generará será una carpeta [android](/PGY4221/exp2-rec/android/) con la versión nativa y una carpeta [www](/PGY4221/exp2-rec/www/) con los archivos necesarios para su ejecución.
+
+Si instalaste Android Studio, puedes abrir el proyecto versión nativa con el siguiente comando:
+
+> `ionic cap open android`
+
+En Android Studio puedes compilar y ensamblar el proyecto (*Build*) y ejecutarlo (*Run*) para ver la app en su versión nativa. Considera que especialmente las primeras ejecuciones toman su tiempo.
+
+> **_IMPORTANTE_**: Cada vez que quieras hacer cambios a tu app original (versión web) y ver reflejados esos cambios en la versión nativa, debes volver a ejecutar el comando `ionic capacitor sync android`.
+
+### 6.2 Implementación de servicio de persistencia
+
+En este paso ya puedes empezar a implementar en tu código la persistencia en SQLite, para luego probarla en el emulador. En la pestaña `Nueva2` implementaremos un input simple que guardará un texto en la base de datos de forma persistente.
+
+Primero implementamos un nuevo servicio para storage con SQlite:
+
+> `ionic g service services/DB`
+
+En este caso, hay que modificar el archivo [`db.service.ts`](/PGY4221/exp2-rec/src/app/app.module.ts) e incorporar en `providers` el componente `SQLite` para habilitar su inyección en la app:
+
+```typescript
+// ..
+import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, SQLite], // <- acá se incorporó
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
+
+Modificamos [`db.service.ts`](/PGY4221/exp2-rec/src/app/services/db.service.ts) para incorporar métodos relevantes a través de las librerías necesarias:
+
+```typescript
+import { Injectable } from '@angular/core';
+import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
+import { Platform } from '@ionic/angular';
+import { BehaviorSubject } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DBService {
+  private database: SQLiteObject | null = null;
+  private dbLista: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+  constructor(
+    private platform: Platform,
+    private sqlite: SQLite
+  ) { 
+    this.crearBD();
+  }
+
+  crearBD() {
+    this.platform.ready().then(() => {
+      this.sqlite.create({ 
+        name: 'ejemplo.db',
+        location: 'default' 
+      }).then((db: SQLiteObject) => {
+        this.database = db;
+        console.log("BD Creada");
+        this.crearTabla();
+      }).catch((e) => {
+        this.dbLista.next(false);
+        console.log("Error al crear DB: " + e); 
+      })
+    });
+  }
+
+  dbState() {
+    return this.dbLista;
+  }
+
+  async crearTabla() {
+    if(this.database != null) {
+      try {      
+        // OJO: importante que las consultas terminen con ;
+        await this.database.executeSql("CREATE TABLE IF NOT EXISTS datos(texto VARCHAR(50));", []);
+        await this.database.executeSql("INSERT OR IGNORE INTO datos(texto) VALUES ('Texto inicial');", []);
+        this.dbLista.next(true);
+      } 
+      catch (error) {
+        console.error(error);
+      } 
+    }
+    else {
+      this.dbLista.next(false);
+    }
+  }
+
+  async obtenerTexto() {
+    if(this.database != null) {
+      let res = await this.database.executeSql(
+        `SELECT * FROM datos;`, []
+      );
+
+      if(res.rows.length > 0) 
+        return res.rows.item(0).texto;        
+    }
+
+    return 'No hay datos';
+  }
+}
+```
+
+Modificamos [`nueva2.page.ts`](/PGY4221/exp2-rec/src/app/nueva2/nueva2.page.ts) para incorporar la captura del texto que se obtendrá de la BD:
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { DBService } from '../services/db.service';
+
+@Component({
+  selector: 'app-nueva2',
+  templateUrl: './nueva2.page.html',
+  styleUrls: ['./nueva2.page.scss'],
+  standalone: false
+})
+export class Nueva2Page implements OnInit {
+  texto: string = '';
+
+  constructor(private db: DBService) { }
+
+  async ngOnInit() {
+    this.db.dbState().subscribe({
+      next: async () => {
+        this.texto = await this.db.obtenerTexto()
+      }
+    }); 
+  }
+}
+```
+
+Modificamos [`nueva2.page.html`](/PGY4221/exp2-rec/src/app/nueva2/nueva2.page.html) para reflejar en la UI:
+
+```typescript
+<ion-content [fullscreen]="true">
+  // ...
+
+   <span>Texto desde la BD:</span>
+   <p style="font-weight: bolder; color: blue;">{{ texto }}</p>
+</ion-content>
+```
+
+Con estos cambios, actualizamos la versión nativa con `ionic cap sync android` y probamos en nuestro emulador, para asegurarnos que el texto almacenado en la BD se muestra en la pestaña `Nueva2`.
+
+> Todos los cambios hasta acá estarán publicados en el branch `tutorial-exp2-rec`, commit con descripción "*Hasta sección 6*".

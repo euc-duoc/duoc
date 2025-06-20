@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DBService } from '../services/db.service';
 
 @Component({
   selector: 'app-nueva2',
@@ -7,10 +8,15 @@ import { Component, OnInit } from '@angular/core';
   standalone: false
 })
 export class Nueva2Page implements OnInit {
+  texto: string = '';
 
-  constructor() { }
+  constructor(private db: DBService) { }
 
   ngOnInit() {
+    this.db.dbState().subscribe({
+      next: async () => {
+        this.texto = await this.db.obtenerTexto()
+      }
+    });    
   }
-
 }
