@@ -31,7 +31,7 @@ Esperar el despliegue del proyecto, el cual **quedará alojado en la carpeta [no
 
 Probar instalación sobre versión web ejecutando:
 
-> ionic start
+> ionic serve
 
 o
 
