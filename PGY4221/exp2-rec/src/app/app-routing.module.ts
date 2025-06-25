@@ -14,7 +14,11 @@ const routes: Routes = [
   {
     path: 'portada',
     loadChildren: () => import('./portada/portada.module').then( m => m.PortadaPageModule)
+  },  {
+    path: 'nueva3',
+    loadChildren: () => import('./nueva3/nueva3.module').then( m => m.Nueva3PageModule)
   }
+
 ];
 
 @NgModule({

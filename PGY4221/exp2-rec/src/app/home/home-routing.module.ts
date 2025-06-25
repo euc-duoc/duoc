@@ -16,6 +16,10 @@ const routes: Routes = [
         loadChildren: () => import('../nueva2/nueva2.module').then(m => m.Nueva2PageModule)
       },
       {
+        path: 'nueva3',
+        loadChildren: () => import('../nueva3/nueva3.module').then(m => m.Nueva3PageModule)
+      },
+      {
         path: '',
         redirectTo: '/home/nueva',
         pathMatch: 'full'
