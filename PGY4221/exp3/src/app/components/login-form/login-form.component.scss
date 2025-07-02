@@ -1,0 +1,15 @@
+ion-row {
+    align-items: center;
+}
+
+ion-input {
+    --background: grey;    
+}
+
+::ng-deep li {
+    color: red !important;
+}
+
+ul {
+    font-size: small;
+}
