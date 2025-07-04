@@ -13,11 +13,13 @@
 ##  Actualizar e iniciar proyecto Android (cada vez que se cambia versión web)
 - `ionic capacitor sync android`
 
-
 # Comandos para inicializar persistencia Local (compatible con web)
-
 - `npm install @ionic/storage`
 - `npm install @ionic/storage-angular`
+
+# Comandos para inicializar y abrir Cypress (testing)
+- `npm install cypress`
+- `npx cypress open`
 
 
 

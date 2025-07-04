@@ -1,26 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-//import { userData } from '../../datos'
-import { DBService } from 'src/app/services/db.service';
 import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.scss'],
-  //providers:  [ DBService ],
   standalone: false
 })
 export class LoginFormComponent implements OnInit {
   datos = {
     user: "user",
     pwd: ""
-  }  
+  }
 
-  // Nota: DBService inyectado
   constructor(
-    private router: Router, 
-    private db: DBService,
+    private router: Router,
     private storage: StorageService
   ) {}
 
@@ -42,7 +37,7 @@ export class LoginFormComponent implements OnInit {
       errorElem.innerHTML = '';
   }
 
-  async validateInputs (usarStorage :boolean = false) {
+  async validateInputs () {
     const nombreInput: HTMLInputElement  = <HTMLInputElement>document.getElementById('nombreUsuario');
     const passwordInput: HTMLInputElement = <HTMLInputElement>document.getElementById('password');
     let valid = true;
@@ -58,9 +53,7 @@ export class LoginFormComponent implements OnInit {
     }
 
     if(valid) {
-      let usuarioExiste = usarStorage ? 
-        await this.validateInputsStorage(nombreInput, passwordInput) :
-        this.validateInputsDB(nombreInput, passwordInput);
+      let usuarioExiste = await this.validateInputsStorage(nombreInput, passwordInput);
 
       if(!usuarioExiste) {
         this.showErr("No se encuentra un usuario con dicha contraseña.");
@@ -71,17 +64,15 @@ export class LoginFormComponent implements OnInit {
     return valid;
   };
 
-  private validateInputsDB(nombreInput: HTMLInputElement, passwordInput: HTMLInputElement) {
-    return this.db.existeUsuario(nombreInput?.value, passwordInput?.value);
-  }
-
   private async validateInputsStorage(nombreInput: HTMLInputElement, passwordInput: HTMLInputElement) {
-    let datosUsuarios = await this.storage.get("usuarios");
+    if(this.storage != null) {
+        let datosUsuarios = await this.storage.get("users");
 
-    if(datosUsuarios) {
-      for(let i in datosUsuarios) {
-        if(datosUsuarios[i].user == nombreInput?.value && datosUsuarios[i].pass == passwordInput?.value)
-          return true;
+      if(datosUsuarios) {
+        for(let i in datosUsuarios) {
+          if(datosUsuarios[i].user == nombreInput?.value && datosUsuarios[i].pass == passwordInput?.value)
+            return true;
+        }
       }
     }
       
@@ -90,10 +81,10 @@ export class LoginFormComponent implements OnInit {
   
   ngOnInit() {}
 
-  async iniciar(usarStorage :boolean = false) {
+  async iniciar() {
     this.clearErrs();
 
-    if(!await this.validateInputs(usarStorage))
+    if(!await this.validateInputs())
       return;
 
     let navExtras: NavigationExtras = {

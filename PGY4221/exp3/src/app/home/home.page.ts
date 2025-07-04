@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { userData } from '../datos'
-import { DBService } from '../services/db.service';
 import { Mascota } from '../services/mascota';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-home',
@@ -15,7 +14,7 @@ export class HomePage {
   mascotas: Array<Mascota> = [];
   state: any;
 
-  constructor(private router: Router, private db: DBService) {
+  constructor(private router: Router, private storage: StorageService) {
     if(this.router.getCurrentNavigation()?.extras.state)
       this.state = this.router.getCurrentNavigation()?.extras.state;
     else
@@ -24,10 +23,27 @@ export class HomePage {
 
   async ngOnInit() {
     this.username = this.state['user'];
+    let usersDB = await this.storage.get("users");
 
-    this.db.dbState().subscribe(async (res) => { 
-      if(res)
-        this.mascotas = await this.db.buscarMascotasDeUsuario(this.username);
-    });
+    for(let i in usersDB) {
+      if(usersDB[i].user == this.username) {
+        let mascotasIds = usersDB[i].mascotas;
+        this.mascotas = [];
+        let mascotasDB = await this.storage.get("mascotas");
+
+        for(let i in mascotasDB) {
+          if(mascotasIds.includes(mascotasDB[i].id)) {
+            let mascota = new Mascota()
+            mascota.id = mascotasDB[i].id;
+            mascota.nombre = mascotasDB[i].nombre;
+            mascota.tipo = mascotasDB[i].tipo;
+            mascota.sexo = mascotasDB[i].sexo;
+            mascota.raza = mascotasDB[i].raza;
+            mascota.foto = mascotasDB[i].foto;
+            this.mascotas.push(mascota)
+          }
+        }
+      }
+    }
   }
 }
